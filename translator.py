@@ -3,6 +3,9 @@ import os
 import tkinter as tk
 from tkinter import ttk, simpledialog
 
+from components.open_dialog import OpenDialog
+
+
 class TaskBar(ttk.Frame):
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
@@ -18,8 +21,14 @@ class MainWindow(ttk.Frame):
 
         taskbar = TaskBar(self, padding=10)
         #self.connect_w = ttk.Button(taskbar, text="Connect...", command=self.connect)
-        self.connect_w = ttk.Button(taskbar, text="Connect...")
-        self.connect_w.pack(side=tk.LEFT)
+        self.open_w = ttk.Button(taskbar, text="Open...", command=open)
+        self.open_w.pack(side=tk.LEFT)
+        self.save_w = ttk.Button(taskbar, text="Save...")
+        self.save_w.pack(side=tk.LEFT)
+        self.quit_w = ttk.Button(taskbar, text="QUIT")
+        self.quit_w.pack(side=tk.RIGHT)
+
+        taskbar.pack(side=tk.TOP, fill=tk.X)
 
     def create_menubar(self):
         menubar = tk.Menu(self._parent)
@@ -33,6 +42,8 @@ class MainWindow(ttk.Frame):
         #menu_connect.add_command(label='Disconnect', command=self.disconnect)
         return menubar
 
+    def open(self):
+        dialog = tk.filedialog.askdirectory()
 
 class App(tk.Tk):
 
