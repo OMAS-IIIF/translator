@@ -1,9 +1,11 @@
 import io
+import json
 import os
 import tkinter as tk
-from tkinter import ttk, simpledialog
+from pprint import pprint
+from tkinter import ttk, filedialog
+from pathlib import Path
 
-from components.open_dialog import OpenDialog
 
 
 class TaskBar(ttk.Frame):
@@ -12,6 +14,8 @@ class TaskBar(ttk.Frame):
         self.configure(relief=tk.GROOVE, borderwidth=2)
 
 class MainWindow(ttk.Frame):
+    data: dict[str,[dict[str,str]]]
+
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
         self._parent = parent
@@ -21,12 +25,13 @@ class MainWindow(ttk.Frame):
 
         taskbar = TaskBar(self, padding=10)
         #self.connect_w = ttk.Button(taskbar, text="Connect...", command=self.connect)
-        self.open_w = ttk.Button(taskbar, text="Open...", command=open)
+        self.open_w = ttk.Button(taskbar, text="Open...", command=self.opendir)
         self.open_w.pack(side=tk.LEFT)
         self.save_w = ttk.Button(taskbar, text="Save...")
         self.save_w.pack(side=tk.LEFT)
         self.quit_w = ttk.Button(taskbar, text="QUIT")
         self.quit_w.pack(side=tk.RIGHT)
+        self.data = {}
 
         taskbar.pack(side=tk.TOP, fill=tk.X)
 
@@ -42,8 +47,17 @@ class MainWindow(ttk.Frame):
         #menu_connect.add_command(label='Disconnect', command=self.disconnect)
         return menubar
 
-    def open(self):
-        dialog = tk.filedialog.askdirectory()
+    def opendir(self):
+        dir = tk.filedialog.askdirectory()
+        directory = Path(dir)
+        files = list(directory.glob("*.json"))
+        for file in files:
+            filepath = Path(file)
+            with open(filepath, "r", encoding="utf-8") as fhandle:
+                lang = filepath.stem
+                self.data[lang] = json.load(fhandle)
+        pprint(self.data)
+
 
 class App(tk.Tk):
 
