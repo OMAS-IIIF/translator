@@ -3,6 +3,8 @@ import platform
 import tkinter as tk
 from tkinter import ttk
 
+from components.Translate import Translate
+
 
 class LangEditor(ttk.Frame):
     keys: dict[str, tk.StringVar]
@@ -98,10 +100,9 @@ class LangEditor(ttk.Frame):
                 entry.grid(row=row, column=col, sticky="nsew")
                 col += 1
             self.fromlang[key] = tk.StringVar(scrollable_frame, self.langs[0])
-            fromlang = ttk.Combobox(scrollable_frame, textvariable=self.fromlang[key], width=3)
-            fromlang["values"] = self.langs
-            fromlang.grid(row=row, column=col, sticky="nsew")
-            fromlang.grid_propagate(False)
+            translate = Translate(scrollable_frame, data=data, key=key, langs=self.langs)
+            translate.grid(row=row, column=col, sticky="nsew")
+            translate.grid_propagate(False)
             row += 1
 
         # Ensure frame resizes dynamically

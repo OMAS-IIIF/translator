@@ -1,2 +1,8 @@
 /.idea/
 /poetry.lock
+
+/components/__pycache__/langeditor.cpython-313.pyc
+/components/__pycache__/connection.cpython-313.pyc
+/components/__pycache__/singleton.cpython-313.pyc
+/components/__pycache__/Translate.cpython-313.pyc
+/.DS_Store
