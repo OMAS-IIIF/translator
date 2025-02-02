@@ -81,7 +81,7 @@ class LangEditor(ttk.Frame):
                     ttk.Label(scrollable_frame, text=lang.upper()).grid(row=0, column=col, sticky="nsew")
                     scrollable_frame.columnconfigure(col, weight=1)
                     col += 1
-                gaga = ttk.Label(scrollable_frame, text="Action", width=25)
+                gaga = ttk.Label(scrollable_frame, text="Action", width=3)
                 gaga.grid(row=0, column=col, sticky="nsew")
                 gaga.grid_propagate(False)
                 scrollable_frame.columnconfigure(col, weight=0)
@@ -97,10 +97,11 @@ class LangEditor(ttk.Frame):
                 entry = ttk.Entry(scrollable_frame, textvariable=tmp[lang])
                 entry.grid(row=row, column=col, sticky="nsew")
                 col += 1
-            self.fromlang[key] = tk.StringVar(scrollable_frame)
-            fromlang = ttk.Combobox(scrollable_frame, textvariable=self.fromlang[key])
+            self.fromlang[key] = tk.StringVar(scrollable_frame, self.langs[0])
+            fromlang = ttk.Combobox(scrollable_frame, textvariable=self.fromlang[key], width=3)
             fromlang["values"] = self.langs
             fromlang.grid(row=row, column=col, sticky="nsew")
+            fromlang.grid_propagate(False)
             row += 1
 
         # Ensure frame resizes dynamically
