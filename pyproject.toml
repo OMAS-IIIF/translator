@@ -8,6 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.12"
 deepl = "^1.21.0"
+pyobjc = "^11.0"
 
 
 [build-system]

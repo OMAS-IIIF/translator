@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 
 from components.connection import Connection
 
@@ -22,6 +22,9 @@ class Translate(ttk.Frame):
             if data[key][ll].get() != key:
                 lang = ll
                 break
+        self.key = key
+        self.data = data
+        self.langs = langs
         self.langvar = tk.StringVar(self, lang)
         self.langselector = ttk.Combobox(self, textvariable=self.langvar, width=3)
         self.langselector["values"] = langs
@@ -32,3 +35,16 @@ class Translate(ttk.Frame):
 
     def doit(self):
         deepl = Connection()
+        for ll in self.langs:
+            if ll == self.langvar.get():
+                continue
+            if self.data[self.key][ll].get() == self.key:
+                deepl_lang = ll.upper()
+                if deepl_lang == "EN":
+                    deepl_lang = "EN-US"
+                try:
+                    result = deepl.client.translate_text(self.data[self.key][self.langvar.get()].get(),
+                                                         target_lang=deepl_lang)
+                except Exception as e:
+                    messagebox.showerror("Error", e)
+                self.data[self.key][ll].set(result)
