@@ -11,7 +11,7 @@ import platform
 import deepl
 from deepl import DeepLClient
 
-from components.connection import Connection
+from components.deeplconnection import DeepLConnection
 from components.deepl_key import DeepLKey
 from components.langeditor import LangEditor
 
@@ -65,35 +65,8 @@ class MainWindow(ttk.Frame):
 
         taskbar.pack(side=tk.TOP, fill=tk.X)
 
-        # key_file_path = os.path.expanduser('~/.deepl_key.json')
-        # try:
-        #     with open(key_file_path) as f:
-        #         jsonkey = json.load(f)
-        #         self.deepl_key = jsonkey['key']
-        # except FileNotFoundError:
-        #     # If the file doesn't exist, prompt the user for the key
-        #     #parent.withdraw()  # Hide the root window
-        #     messagebox.showinfo("Key Required", "The DeepL API key file was not found. Please enter your key.")
-        #     key = simpledialog.askstring("DeepL API Key", "Enter your DeepL API key:")
-        #     if key:
-        #         # Save the key to the file for future use
-        #         self.save_key_to_file(key)
-        #         return
-        #     else:
-        #         messagebox.showerror("Error", "No key provided. Exiting.")
-        #         raise SystemExit("No DeepL API key provided.")
-        # except json.JSONDecodeError:
-        #     messagebox.showerror("Error", "The key file is corrupted. Please check the file or provide a new key.")
-        #     raise SystemExit("Invalid key file.")
         access = DeepLKey()
-        Connection(access.deepl_key)
-
-    # def save_key_to_file(self, key):
-    #     # Save the key to the file in JSON format
-    #     key_file_path = os.path.expanduser('~/.deepl_key.json')
-    #     key_data = {'key': key}
-    #     with open(key_file_path, 'w') as f:
-    #         json.dump(key_data, f)
+        DeepLConnection(access.deepl_key)
 
     def create_menubar(self):
         menubar = tk.Menu(self._parent)

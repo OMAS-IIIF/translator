@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 
-from components.connection import Connection
+from components.deeplconnection import DeepLConnection
 
 
 class Translate(ttk.Frame):
@@ -34,7 +34,7 @@ class Translate(ttk.Frame):
         self.doit.pack(side="left")
 
     def doit(self):
-        deepl = Connection()
+        deepl = DeepLConnection()
         for ll in self.langs:
             if ll == self.langvar.get():
                 continue

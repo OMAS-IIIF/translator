@@ -4,7 +4,7 @@ from components.singleton import singleton
 
 
 @singleton
-class Connection:
+class DeepLConnection:
     client: DeepLClient
     deepl_key: str
 

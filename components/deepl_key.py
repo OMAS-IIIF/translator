@@ -5,6 +5,7 @@ from tkinter import messagebox, simpledialog
 
 class DeepLKey:
     __deepl_key: str
+
     def __init__(self, deepl_key: str | None = None):
         key_file_path = os.path.expanduser('~/.deepl_key.json')
         try:
