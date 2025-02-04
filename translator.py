@@ -1,6 +1,7 @@
 import io
 import json
 import os
+import shutil
 import tkinter as tk
 from pprint import pprint
 from tkinter import ttk, filedialog, messagebox, simpledialog
@@ -34,9 +35,10 @@ class TaskBar(ttk.Frame):
 
 class MainWindow(ttk.Frame):
     data: dict[str, dict[str, tk.StringVar]]  # dict[key: dict[lang, value]]
-    json_files: dict[str,Path]
+    json_files: dict[str, Path]
     lang_editor_w: LangEditor
     deepl_key: str
+    directory: Path
 
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
@@ -52,7 +54,7 @@ class MainWindow(ttk.Frame):
         taskbar = TaskBar(self, padding=10)
         self.open_w = ttk.Button(taskbar, text="Open...", command=self.opendir)
         self.open_w.pack(side=tk.LEFT)
-        self.save_w = ttk.Button(taskbar, text="Save...")
+        self.save_w = ttk.Button(taskbar, text="Save", command=self.save)
         self.save_w.pack(side=tk.LEFT)
         self.add_w = ttk.Button(taskbar, text="Add key...", state="disabled", command=self.add_empty_line)
         self.add_w.pack(side=tk.LEFT)
@@ -83,8 +85,8 @@ class MainWindow(ttk.Frame):
 
     def opendir(self):
         dir = tk.filedialog.askdirectory(initialdir=os.getcwd())
-        directory = Path(dir)
-        files = list(directory.glob("*.json"))
+        self.directory = Path(dir)
+        files = list(self.directory.glob("??.json"))
         tmpdata: dict[str,dict[str, str]] = {}  # dict[lang: dict[key, value]]
         for file in files:
             filepath = Path(file)
@@ -102,6 +104,37 @@ class MainWindow(ttk.Frame):
         self.lang_editor_w.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
         self.add_w.configure(state="enabled")
         self.all_w.configure(state="enabled")
+
+    def save(self):
+        #
+        # first let's make backup copies
+        #
+        for ll, p in self.json_files.items():
+            backups = list(self.directory.glob(f"{ll}.???.json"))
+            version = 0
+            for backup in backups:
+                parts = backup.stem.split(".")
+                tmp = int(parts[-1])
+                if tmp > version:
+                    version = tmp
+            version += 1
+            target = p.with_stem(f"{p.stem}.{version:03}")
+            print(f"{p} ==> {target}")
+            shutil.copy2(p, target)
+        #
+        # reshuffle for writing files
+        #   dict[key: dict[lang, value]] ==> dict[lang: dict[key, value]]
+        #
+        res: dict[str,dict[str, str]] = {}
+        for key, tmpdata in self.data.items():
+            for lang, value in tmpdata.items():
+                if res.get(lang) is None:
+                    res[lang] = {}
+                res[lang][key] = value.get()
+        for ll in res.keys():
+            with open(f"{ll}.json", "w", encoding="utf-8") as fhandle:
+                json.dump(res[ll], fhandle, indent=4)
+
 
     def add_empty_line(self):
         if self.lang_editor_w:
