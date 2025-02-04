@@ -38,7 +38,7 @@ class Translate(ttk.Frame):
         for ll in self.langs:
             if ll == self.langvar.get():
                 continue
-            if self.data[self.key][ll].get() == self.key:
+            if self.data[self.key][ll].get() == self.key or self.data[self.key][ll].get() == "":
                 deepl_lang = ll.upper()
                 if deepl_lang == "EN":
                     deepl_lang = "EN-US"
@@ -47,4 +47,5 @@ class Translate(ttk.Frame):
                                                          target_lang=deepl_lang)
                 except Exception as e:
                     messagebox.showerror("Error", e)
+                    return
                 self.data[self.key][ll].set(result)

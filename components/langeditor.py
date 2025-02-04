@@ -2,6 +2,7 @@ import os
 import platform
 import tkinter as tk
 from tkinter import ttk, simpledialog
+from typing import Callable
 
 from components.Translate import Translate
 
@@ -136,7 +137,7 @@ class LangEditor(ttk.Frame):
         col = 1
         for lang in self.langs:
             self.data[key][lang] = tk.StringVar(self.scrollable_frame, key)
-            entry = ttk.Entry(self.scrollable_frame, textvariable=self.data[key][lang])
+            entry = ttk.Entry(self.scrollable_frame, textvariable=self.data[key][lang], foreground="red")
             entry.grid(row=row, column=col, sticky="nsew")
             col += 1
         self.fromlang[key] = tk.StringVar(self.scrollable_frame, self.langs[0])
@@ -145,4 +146,5 @@ class LangEditor(ttk.Frame):
         translate.grid_propagate(False)
         self.parent.update_idletasks()
         self.canvas_w.yview_moveto(1.0)
+
 

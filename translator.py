@@ -8,6 +8,7 @@ from tkinter import ttk, filedialog, messagebox, simpledialog
 from pathlib import Path
 import sys
 import platform
+from typing import TextIO
 
 import deepl
 from deepl import DeepLClient
@@ -18,6 +19,9 @@ from components.langeditor import LangEditor
 
 current_os = platform.system()  # "Windows", "Darwin" (macOS), "Linux"
 
+#
+# <a href="https://www.freepik.com/icons/translation/8#uuid=462e7e58-4e23-49be-a37a-d7fb64545b36">Icon by rizky maulidhani</a>
+#
 
 # Get absolute path for resources
 def resource_path(relative_path):
@@ -59,7 +63,7 @@ class MainWindow(ttk.Frame):
         self.add_w = ttk.Button(taskbar, text="Add key...", state="disabled", command=self.add_empty_line)
         self.add_w.pack(side=tk.LEFT)
 
-        self.all_w = ttk.Button(taskbar, state="disabled", text="Translate all")
+        self.all_w = ttk.Button(taskbar, state="disabled", text="Translate all", command=self.translate_all)
         self.all_w.pack(side=tk.LEFT)
 
         self.quit_w = ttk.Button(taskbar, text="QUIT", command=self.quit)
@@ -73,10 +77,17 @@ class MainWindow(ttk.Frame):
     def create_menubar(self):
         menubar = tk.Menu(self._parent)
         self._parent.configure(menu=menubar)
-        menu_connect = tk.Menu(menubar)
-        menu_edit = tk.Menu(menubar)
-        menubar.add_cascade(menu=menu_connect, label='File...')
-        menubar.add_cascade(menu=menu_edit, label='Edit')
+        menu_file = tk.Menu(menubar, tearoff=0)
+        menu_action = tk.Menu(menubar, tearoff=0)
+
+        menubar.add_cascade(menu=menu_file, label='File')
+        menu_file.add_command(label="Open...", command=self.opendir)
+        menu_file.add_command(label="Save", command=self.save)
+        menu_file.add_command(label="Purge", command=self.purge)
+
+        menubar.add_cascade(menu=menu_action, label='Action')
+        menu_action.add_command(label="Add line", command=self.add_empty_line)
+        menu_action.add_command(label="Translate all", command=self.add_empty_line)
 
         return menubar
 
@@ -100,15 +111,17 @@ class MainWindow(ttk.Frame):
                 if self.data.get(key, None) is None:
                     self.data[key] = {}
                 self.data[key][lang] = tk.StringVar(self, value)
-        self.lang_editor_w = LangEditor(self, self.data)
+        self.lang_editor_w = LangEditor(self, data=self.data)
         self.lang_editor_w.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
-        self.add_w.configure(state="enabled")
-        self.all_w.configure(state="enabled")
+        self.add_w.configure(state=tk.ACTIVE)
+        self.all_w.configure(state=tk.ACTIVE)
 
     def save(self):
         #
         # first let's make backup copies
         #
+        if not self.json_files:
+            return
         for ll, p in self.json_files.items():
             backups = list(self.directory.glob(f"{ll}.???.json"))
             version = 0
@@ -131,14 +144,33 @@ class MainWindow(ttk.Frame):
                     res[lang] = {}
                 res[lang][key] = value.get()
         for ll in res.keys():
-
-            with open(self.json_files[lang], "w", encoding="utf-8") as fhandle:
+            with open(self.json_files[ll], "w", encoding="utf-8") as fhandle:
                 json.dump(res[ll], fhandle, indent=4)
 
+    def purge(self):
+        backups = list(self.directory.glob(f"??.???.json"))
+        for backup in backups:
+            delpath = Path(backup)
+            delpath.unlink()
 
     def add_empty_line(self):
         if self.lang_editor_w:
             self.lang_editor_w.add_line()
+
+    def translate_all(self):
+        deepl = DeepLConnection()
+        for key, tmpdata in self.data.items():
+            for lang, value in tmpdata.items():
+                if value.get() == key or value.get() == "":
+                    deepl_lang = lang.upper()
+                    if deepl_lang == "EN":
+                        deepl_lang = "EN-US"
+                    try:
+                        result = deepl.client.translate_text(self.data[key][lang].get(), target_lang=deepl_lang)
+                    except Exception as e:
+                        print(e)
+                        result = key
+                    self.data[key][lang].set(result)
 
 
 class App(tk.Tk):
