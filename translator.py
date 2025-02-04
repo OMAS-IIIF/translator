@@ -75,7 +75,7 @@ class MainWindow(ttk.Frame):
         self._parent.configure(menu=menubar)
         menu_connect = tk.Menu(menubar)
         menu_edit = tk.Menu(menubar)
-        menubar.add_cascade(menu=menu_connect, label='Connect')
+        menubar.add_cascade(menu=menu_connect, label='File...')
         menubar.add_cascade(menu=menu_edit, label='Edit')
 
         return menubar
@@ -119,7 +119,6 @@ class MainWindow(ttk.Frame):
                     version = tmp
             version += 1
             target = p.with_stem(f"{p.stem}.{version:03}")
-            print(f"{p} ==> {target}")
             shutil.copy2(p, target)
         #
         # reshuffle for writing files
@@ -132,7 +131,8 @@ class MainWindow(ttk.Frame):
                     res[lang] = {}
                 res[lang][key] = value.get()
         for ll in res.keys():
-            with open(f"{ll}.json", "w", encoding="utf-8") as fhandle:
+
+            with open(self.json_files[lang], "w", encoding="utf-8") as fhandle:
                 json.dump(res[ll], fhandle, indent=4)
 
 

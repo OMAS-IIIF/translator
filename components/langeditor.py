@@ -98,7 +98,7 @@ class LangEditor(ttk.Frame):
             for lang in self.langs:
                 if tmp.get(lang, None) is None:
                     tmp[lang] = tk.StringVar(self.scrollable_frame, key)
-                entry = ttk.Entry(self.scrollable_frame, textvariable=tmp[lang])
+                entry = ttk.Entry(self.scrollable_frame, textvariable=tmp[lang], foreground="red")
                 entry.grid(row=row, column=col, sticky="nsew")
                 col += 1
             self.fromlang[key] = tk.StringVar(self.scrollable_frame, self.langs[0])
