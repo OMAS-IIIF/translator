@@ -1,10 +1,8 @@
-import os
 import platform
 import tkinter as tk
 from tkinter import ttk, simpledialog
-from typing import Callable
 
-from components.Translate import Translate
+from paraglidetranslator.components.Translate import Translate
 
 
 class LangEditor(ttk.Frame):

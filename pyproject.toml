@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "translator"
+name = "paraglidetranslator"
 version = "0.1.0"
 description = "Translator for Paraglide JSONS based on DeepL API"
 authors = ["Lukas Rosenthaler <lukas.rosenthaler@unibas.ch>"]
@@ -14,3 +14,6 @@ pyobjc = "^11.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+paraglidetranslator = "paraglidetranslator.main:main"

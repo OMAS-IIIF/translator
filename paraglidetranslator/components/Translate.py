@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 
-from components.deeplconnection import DeepLConnection
+from paraglidetranslator.components.deeplconnection import DeepLConnection
 
 
 class Translate(ttk.Frame):

@@ -1,21 +1,15 @@
-import io
 import json
 import os
 import shutil
 import tkinter as tk
-from pprint import pprint
-from tkinter import ttk, filedialog, messagebox, simpledialog
+from tkinter import ttk, filedialog
 from pathlib import Path
 import sys
 import platform
-from typing import TextIO
 
-import deepl
-from deepl import DeepLClient
-
-from components.deeplconnection import DeepLConnection
-from components.deepl_key import DeepLKey
-from components.langeditor import LangEditor
+from paraglidetranslator.components.deeplconnection import DeepLConnection
+from paraglidetranslator.components.deepl_key import DeepLKey
+from paraglidetranslator.components.langeditor import LangEditor
 
 current_os = platform.system()  # "Windows", "Darwin" (macOS), "Linux"
 
@@ -145,7 +139,7 @@ class MainWindow(ttk.Frame):
                 res[lang][key] = value.get()
         for ll in res.keys():
             with open(self.json_files[ll], "w", encoding="utf-8") as fhandle:
-                json.dump(res[ll], fhandle, indent=4)
+                json.dump(res[ll], fhandle, indent=4, ensure_ascii=False)
 
     def purge(self):
         backups = list(self.directory.glob(f"??.???.json"))
@@ -178,12 +172,12 @@ class App(tk.Tk):
     def __init__(self, title, *args, **kwargs):
         super().__init__(title, *args, **kwargs)
         #self.title = 'LocoPy V01'
-        self.wm_title('Translator V0.1')
+        self.wm_title('Translator V0.1.1')
         self.geometry('1200x700+100+100')
 
 
-if __name__ == '__main__':
-    root = App('LocoPy V0.1')
+def main():
+    root = App('Translator V0.1.1')
     main = MainWindow(root)
 
     #
@@ -213,3 +207,6 @@ if __name__ == '__main__':
         print(f"Warning: Unsupported OS ({current_os}). No icon applied.")
 
     root.mainloop()
+
+if __name__ == '__main__':
+    main()

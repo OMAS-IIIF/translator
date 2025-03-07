@@ -1,6 +1,6 @@
 from deepl import DeepLClient
 
-from components.singleton import singleton
+from paraglidetranslator.components.singleton import singleton
 
 
 @singleton

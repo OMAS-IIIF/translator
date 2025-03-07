@@ -1,5 +1,6 @@
 /.idea/
 /poetry.lock
-/components/__pycache__
+/paraglidetranslator/components/__pycache__
 /.DS_Store
 .DS_Store
+/paraglidetranslator/__pycache__
