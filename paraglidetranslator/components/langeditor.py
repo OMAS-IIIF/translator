@@ -1,5 +1,6 @@
 import platform
 import tkinter as tk
+from pprint import pprint
 from tkinter import ttk, simpledialog
 
 from paraglidetranslator.components.Translate import Translate
@@ -9,17 +10,18 @@ class LangEditor(ttk.Frame):
     keys: dict[str, tk.StringVar]
     langs: [str]
     fromlang: dict[str, tk.StringVar]
+    scrollable_frame: ttk.Frame
 
     def __init__(self,
                  parent: tk.Widget,
-                 data: dict[str, dict[str, tk.StringVar]],
+                 data: dict[str, dict[str, tk.StringVar]],  # dict[key: dict[lang, value]]
                  *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
         self.configure(padding=5, borderwidth=3, relief=tk.RIDGE)
         self.keys = {}
         self.langs = []
         self.fromlang = {}
-        self.data = data
+        self.data = data  # dict[key: dict[lang, value]]
         self.parent = parent
 
         # Create a canvas and a scrollbar

@@ -56,6 +56,10 @@ class MainWindow(ttk.Frame):
         self.save_w.pack(side=tk.LEFT)
         self.add_w = ttk.Button(taskbar, text="Add key...", state="disabled", command=self.add_empty_line)
         self.add_w.pack(side=tk.LEFT)
+        self.sort_w = ttk.Button(taskbar, text="Sort", state="disabled", command=self.sort_data)
+        self.sort_w.pack(side=tk.LEFT)
+        self.purge_w = ttk.Button(taskbar, text="Purge", state="disabled", command=self.purge)
+        self.purge_w.pack(side=tk.LEFT)
 
         self.all_w = ttk.Button(taskbar, state="disabled", text="Translate all", command=self.translate_all)
         self.all_w.pack(side=tk.LEFT)
@@ -109,6 +113,8 @@ class MainWindow(ttk.Frame):
         self.lang_editor_w.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
         self.add_w.configure(state=tk.ACTIVE)
         self.all_w.configure(state=tk.ACTIVE)
+        self.sort_w.configure(state=tk.ACTIVE)
+        self.purge_w.configure(state=tk.ACTIVE)
 
     def save(self):
         #
@@ -146,6 +152,16 @@ class MainWindow(ttk.Frame):
         for backup in backups:
             delpath = Path(backup)
             delpath.unlink()
+
+    def sort_data(self):
+        self.lang_editor_w.destroy()
+        self.data = dict(sorted(self.data.items()))
+        self.lang_editor_w = LangEditor(self, data=self.data)
+        self.lang_editor_w.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        self.add_w.configure(state=tk.ACTIVE)
+        self.all_w.configure(state=tk.ACTIVE)
+        self.sort_w.configure(state=tk.ACTIVE)
+        self.purge_w.configure(state=tk.ACTIVE)
 
     def add_empty_line(self):
         if self.lang_editor_w:
